@@ -22,11 +22,7 @@ export class AddComponent implements OnInit {
   search:any;
   formatter:any;
   displayerr:boolean;
-  datemsg:string;
-  taskmsg:string;
-  startdatemsg:string;
-  enddatemsg:string;
-  prioritymsg:string;
+  errmsg:string;
 
   selectedParent:{_id:string, task:string} = null;
   constructor(private taskService: TaskService, private router: Router) { }
@@ -73,11 +69,7 @@ export class AddComponent implements OnInit {
     this.task.Priority = p;
   }
   clearerrmsg(){
-    this.datemsg='';
-    this.taskmsg='';
-    this.startdatemsg='';
-    this.enddatemsg='';
-    this.prioritymsg='';
+    this.errmsg='';
   }
   resetTask(){
    this.clearerrmsg();
@@ -94,40 +86,42 @@ export class AddComponent implements OnInit {
     this.clearerrmsg();
     this.task.End_Date = new Date(`${this.ending_date.year}/${this.ending_date.month}/${this.ending_date.day}`);
     this.task.start_date = new Date(`${this.starting_date.year}/${this.starting_date.month}/${this.starting_date.day}`);
-
-     console.log(this.task.start_date);
-     console.log(this.starting_date);
-
-    // console.log(this.selectedParent);
-    //Check for validity of dates.
-    if (this.task.Priority === 0){
+    
+    if (this.task.task === ''){
       this.displayerr=true;
-      this.prioritymsg="Please select a priority"; 
+      this.errmsg="Please enter the task name"; 
+      return;
+    }
+  
+    if (Object.keys(this.starting_date).length === 0)
+    {
+        this.displayerr=true;
+        this.errmsg="Please select Start Date"; 
+        return;
     }
    
+    if (Object.keys(this.ending_date).length === 0)
+    {
+        this.displayerr=true;
+        this.errmsg="Please select End Date"; 
+        return;
+    }
      //Add validation for start date and end date to be selected.
     
     if (this.task.start_date && this.task.End_Date){
 
       if (this.task.start_date > this.task.End_Date){
         this.displayerr=true;
-        this.enddatemsg="end date is less than start date"; 
+        this.errmsg="End date should be greater than start date"; 
+        return;
       }
 
     }
-    
-    if (this.task.task === ''){
-      console.log('inside taks validation');
-      this.displayerr=true;
-      this.taskmsg="Please enter the task name"; 
-    }
-   
+
     if(!!this.selectedParent){
       this.task.parent = this.selectedParent._id;
     }
     if(!this.displayerr){
-    console.log("Entering to save");
-    console.log(this.task);
     this.taskService.createTask(this.task)
     .subscribe((res: any)=>{
       // console.log(res);

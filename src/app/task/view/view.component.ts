@@ -47,9 +47,7 @@ export class ViewComponent implements OnInit {
     this.taskService.start_date= task1.start_date;
 
     //this.taskService.start_date='2014-01-25';
-    console.log("inside view component");
-    console.log(task1.start_date);
-    console.log ("exepted output");
+   
     this.taskService.End_Date=task1.End_Date;
     this.taskService.Finished=task1.Finished;
     this.router.navigate(['/', 'update']);
