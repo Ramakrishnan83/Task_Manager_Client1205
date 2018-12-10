@@ -35,6 +35,7 @@ export class AddComponent implements OnInit {
     this.task.task = '';
     this.displayerr=false;  
     this.clearerrmsg();
+  
   }
   
   ngBootstrapTypeahead(){
@@ -81,30 +82,31 @@ export class AddComponent implements OnInit {
    this.ending_date={};
    this.starting_date={};
   }
-  addTask(){
-    this.displayerr=false;
-    this.clearerrmsg();
-    this.task.End_Date = new Date(`${this.ending_date.year}/${this.ending_date.month}/${this.ending_date.day}`);
-    this.task.start_date = new Date(`${this.starting_date.year}/${this.starting_date.month}/${this.starting_date.day}`);
-    
+  validateTask(){
     if (this.task.task === ''){
       this.displayerr=true;
       this.errmsg="Please enter the task name"; 
-      return;
+      return false;
     }
   
+    if (this.task.Priority === 0){
+      this.displayerr=true;
+      this.errmsg="Please select priority greater than 0"; 
+      return false;
+    }
+
     if (Object.keys(this.starting_date).length === 0)
     {
         this.displayerr=true;
         this.errmsg="Please select Start Date"; 
-        return;
+        return false;
     }
    
     if (Object.keys(this.ending_date).length === 0)
     {
         this.displayerr=true;
         this.errmsg="Please select End Date"; 
-        return;
+        return false;
     }
      //Add validation for start date and end date to be selected.
     
@@ -113,15 +115,23 @@ export class AddComponent implements OnInit {
       if (this.task.start_date > this.task.End_Date){
         this.displayerr=true;
         this.errmsg="End date should be greater than start date"; 
-        return;
+        return false;
       }
 
     }
+    return true;
+  }
 
+  addTask(){
+    this.displayerr=false;
+    this.clearerrmsg();
+    this.task.End_Date = new Date(`${this.ending_date.year}/${this.ending_date.month}/${this.ending_date.day}`);
+    this.task.start_date = new Date(`${this.starting_date.year}/${this.starting_date.month}/${this.starting_date.day}`);
     if(!!this.selectedParent){
       this.task.parent = this.selectedParent._id;
     }
-    if(!this.displayerr){
+      
+    if (this.validateTask){
     this.taskService.createTask(this.task)
     .subscribe((res: any)=>{
       // console.log(res);

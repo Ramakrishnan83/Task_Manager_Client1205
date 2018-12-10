@@ -122,7 +122,13 @@ export class UpdateComponent implements OnInit {
       this.errmsg="Please enter the task name"; 
       return;
     }
-  
+    
+    if (this.task.Priority === 0){
+      this.displayerr=true;
+      this.errmsg="Please select priority greater than 0"; 
+      return;
+    }
+
     if (Object.keys(this.starting_date).length === 0)
     {
         this.displayerr=true;
