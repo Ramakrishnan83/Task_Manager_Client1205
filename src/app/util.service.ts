@@ -4,6 +4,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class UtilService {
-  host:string = "http://localhost:3636";
+  host:string = "https://tranquil-forest-26141.herokuapp.com";
   constructor() { }
 }
